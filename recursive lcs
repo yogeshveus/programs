@@ -1,0 +1,50 @@
+#include <iostream>
+#include <set>
+using namespace std;
+#include <vector>
+#include <string>
+
+int lcs(string& a, string &b, int m, int n, vector<vector<int>>& memo){
+    if(m==0 || n==0){
+        return 0;
+    }
+    if(memo[m][n]!=-1){
+        return memo[m][n];
+    }
+    if(a[m-1] == b[n-1]){
+        return memo[m][n] = 1+lcs(a,b,m-1,n-1,memo);
+    }
+    return memo[m][n] = max(lcs(a,b,m-1,n,memo), lcs(a,b,m,n-1,memo));
+}
+
+void printlcs(string &a, string &b, int m, int n, vector<vector<int>> &memo, string currlcs, set<string>& lcsset){
+    if(m==0 || n==0){
+        lcsset.insert(currlcs);
+        return;
+    }
+    if(a[m-1] == b[n-1]){
+        printlcs(a,b,m-1,n-1, memo, a[m-1]+currlcs, lcsset);
+    }
+    if(memo[m-1][n] == memo[m][n]){
+        printlcs(a,b,m-1,n,memo,currlcs, lcsset);
+    }
+    if(memo[m][n-1] == memo[m][n]){
+        printlcs(a,b,m,n-1,memo,currlcs, lcsset);
+    }
+    
+}
+
+int main(){
+    string a,b;
+    cin>>a;
+    cin>>b;
+    int m=a.length(), n = b.length();
+    vector<vector<int>> memo(m+1, vector<int>(n+1,-1));
+    
+    lcs(a,b,m,n,memo);
+    set<string> lcsset;
+    printlcs(a,b,m,n,memo,"",lcsset);
+    for(const string a: lcsset){
+        cout << a << endl;
+    }
+}
