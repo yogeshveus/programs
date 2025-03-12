@@ -1,0 +1,64 @@
+Top Down LCS
+Develop a top down dynamic programming algorithm for Longest Common Subsequence problem and implement using C++. Print the length of the LCS and the LCS as well.
+
+Input Format
+
+First line contains the first string, S1
+
+Next line contains the second string, S2
+
+Output Format
+
+Print the length of the longest LCS in the first line
+
+Print the Longest LCS that we get by traversing from the last cell (m,n) of the b table where m is the length of the first string and n is the length of the second string 
+
+
+#include <iostream>
+using namespace std;
+#include <vector>
+
+int lcs(string &a, string &b, int m, int n, vector<vector<int>>&memo){
+    if(m==0 || n==0){
+        return 0;   
+    }
+    if(memo[m][n]!=-1){
+        return memo[m][n];
+    }
+    if(a[m-1] == b[n-1]){
+        return memo[m][n] = 1 + lcs(a, b, m-1, n-1, memo);
+    }
+    return memo[m][n] = max(lcs(a,b,m-1,n,memo), lcs(a,b,m,n-1,memo));
+}
+void construct(string &a, string &b, vector<vector<int>>&memo){
+    int m=a.length();
+    int n=b.length();
+    string st = "";
+    while(m > 0 && n > 0){
+        if(a[m-1] == b[n-1]){
+            st = a[m-1] + st;
+            m--;
+            n--;
+        }
+        else if(memo[m-1][n] >= memo[m][n-1]){
+            m--;
+        }
+        else{
+            n--;
+        }
+    }
+    cout << st;
+}
+int main(){
+    string a;
+    string b;
+    cin>>a;
+    cin>>b;
+    int m=a.length();
+    int n = b.length();
+    vector<vector<int>> memo(m+1, vector<int>(n+1, -1));
+    int s = lcs(a,b,m, n, memo);
+    cout <<s<<endl;
+    construct(a,b,memo);
+}
+
