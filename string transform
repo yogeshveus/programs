@@ -1,0 +1,65 @@
+Transform a string to another
+Given two strings s1 and s2, develop an algorithm to print the positions of the symbols to be swapped to get s2 from s1 with a constraint that symbol in any position ‘p’ can be changed only once. For example, if s1 = ‘abcd’ and s2 = ‘cdab’ then two swaps are required so print 1 3, 2 4. If s1 = ‘abcd’ and s2 = ‘cdba’ then print ‘Not possible’ since the string cannot be transformed by just swapping symbols in a position only once.
+
+Input Format
+
+First line contains the first string, S1
+
+Next line contains the second string, S2
+
+Output Format
+
+Print the positions to be swapped
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+void swap(string& s1, int m,int n){
+    char temp = s1[m];
+    s1[m] = s1[n];
+    s1[n] = temp;
+    return;
+}
+void swapstr(string &s1, string &s2){
+    int m = s1.length();
+    int n = s2.length();
+    if(m!=n){
+        cout<<"Not possible";
+        return;
+    }
+
+    vector<string> swaps;
+    unordered_set<int> swapped;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (s1[i] == s2[j]) {
+                if (swapped.find(i + 1) == swapped.end()) {
+                    swap(s2, i, j);
+                    if (i != j) {
+                        swaps.push_back(to_string(i + 1) + to_string(j + 1));
+                        swapped.insert(i + 1);
+                        swapped.insert(j + 1);
+                    }
+                }
+            }
+        }
+    }
+    if (s1 != s2) {
+        cout << "Not possible" << endl;
+    } 
+    else {
+        for (auto swap : swaps) {
+            cout << swap[0] << " " << swap[1] << endl;
+        }
+    }
+    return;
+}
+
+int main(){
+    string s1,s2;
+    cin>>s1;
+    cin>>s2;
+    swapstr(s1,s2);
+}
