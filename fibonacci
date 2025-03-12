@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+#include <unordered_map>
+
+unordered_map<int, long long> mem;
+
+long long fib(int a){
+    if (mem.find(a) != mem.end()){
+        return mem[a];
+    }
+    if(a==1){
+        return mem[a] = 0;
+    }
+    if(a==2){
+        return mem[a] = 1;
+    }
+    if(a==3){
+        return mem[a]=2;
+    }
+    mem[a] = fib(a-1)+fib(a-2)+fib(a-3);
+    return mem[a];
+}
+int main(){
+    int n;
+    cin>>n;
+    if (n <= 0) {
+        cout << "Not possible" << endl;
+    }
+    long long sum = fib(n);
+    cout<<sum;
+}
