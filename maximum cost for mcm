@@ -1,0 +1,101 @@
+Maximum cost for matrix chain multiplication
+Modify the algorithm developed in problem 4 (matrix chain multiplication problem) to find the way to parenthesize that will have maximum number of multiplications. Print the matrices with parenthesis that will have maximum number of multiplications as well. For example given three matrices and dimension as follows:
+
+4
+10 100 5 50
+
+The code must print the m table as 
+5000 75000 
+25000 
+
+S table as
+1 1 
+2 
+
+Maximum cost is
+75000
+
+Paraenthesization of matrices is 
+(A1(A2A3))
+
+Input Format
+
+First line contains the number of matrices +1, n
+
+Next line contains the dimensions of the matrices in the chain
+
+Output Format
+
+Print the mtable
+
+Print the s table
+
+Print the maximum cost
+
+Print the parenthesization that will lead to maximum cost
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+void print(vector<vector<int>> arr){
+    int f=1;
+    for(int i=1; i<arr.size(); i++){
+        if(f==0) cout << endl;
+        f=0;
+        for(int j=i; j<arr.size(); j++){
+            if(arr[i][j]!=-1){
+                cout<<arr[i][j]<<" ";
+            }
+        }
+    }
+}
+
+vector<vector<int>>m;
+vector<vector<int>>s;
+
+void printpar(int i, int j){
+    if(i==j){
+        cout << "A"<<i;
+        return;
+    }
+    cout <<"(";
+    printpar(i, s[i][j]);
+    printpar(s[i][j]+1, j);
+    cout<<")";
+}
+
+int matrix(vector<int>& arr, int i, int j){
+    if(i==j) return 0;
+    if(m[i][j] != -1) return m[i][j];
+    int max = INT_MIN;
+    for(int k=i; k<j; k++){
+        int cost = matrix(arr, i, k) + matrix(arr, k+1, j) + arr[i-1]*arr[k]*arr[j];
+        if(cost > max){
+            max = cost;
+            s[i][j] = k;
+        }
+    }
+    m[i][j] = max;
+    return max;
+}
+
+int main(){
+    int n;
+    cin>>n;
+    vector<int> arr(n,0);
+    for(int i=0; i<n; i++){
+        cin>>arr[i];
+    }
+    m.assign(n, vector<int>(n,-1));
+    s.assign(n, vector<int>(n,-1));
+    int mm = matrix(arr, 1, n-1);
+    print(m);
+    print(s);
+    cout << mm << endl;
+    printpar(1, n-1);
+}
