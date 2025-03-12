@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+#include <unordered_map>
+#include <climits>
+
+unordered_map<int, int> mem;
+int cost3, cost5;
+
+int cut(int a){
+    if(a<0){
+        return INT_MIN;
+    }
+    if(a==0){
+        return 0;
+    }
+    if(mem.find(a)!=mem.end()){
+        return mem[a];
+    }
+    int cut3 = cost3 + cut(a-3);
+    int cut5 = cost5 + cut(a-5);
+    int waste = -a;
+    int m2 = max(cut3, cut5);
+    mem[a] = max(m2, waste);
+    return mem[a];
+}
+int main(){
+    int n;
+    cin>>n;
+    cin>> cost3;
+    cin>>cost5;
+    int sum = cut(n);
+    cout<<sum;
+}
