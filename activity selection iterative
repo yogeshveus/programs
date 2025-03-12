@@ -1,0 +1,56 @@
+Activity Selection Sort Iterative
+Given a set ‘S’ of ‘n’ activities, implement the iterative greedy algorithm to select a subset of activities from S by selecting the task that finishes first. Sort the activities in ascending order based on finsih time and then select the activities
+
+Input Format
+
+First line contains the number of activities, n
+
+Next 'n' line contains the details of the activities such as name of activity, start time and finish time
+
+Output Format
+
+Print the name of the activities that are selected separated by a space
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+ 
+struct activity{
+    int start, finish;
+    string name;
+};
+
+bool compare(activity a, activity b){
+    return a.finish<b.finish;
+}
+
+void activityselection(vector<activity>& arr) {
+    sort(arr.begin(), arr.end(), compare);
+    int ans = 0;
+    int finish = -1;
+
+    for(int i = 0; i < arr.size(); i++) {
+        if (arr[i].start > finish) {
+            finish = arr[i].finish;
+            cout << arr[i].name<<" ";
+        }
+    }
+}
+
+
+ 
+int main(){
+    int n;
+    cin>>n;
+    vector<activity> arr(n);
+    for(int i=0; i<n; i++){
+        cin >> arr[i].name;
+        cin >> arr[i].start;
+        cin >> arr[i].finish;
+    }
+    activityselection(arr);
+}
