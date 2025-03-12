@@ -1,0 +1,63 @@
+Activity Selection using Priority Queue based on Start time
+Given a set ‘S’ of ‘n’ activities, implement the iterative greedy algorithm to select a subset of activities from S by selecting the task that starts last. Build a priority queue (max heap) based on start time and then select the activities
+
+Input Format
+
+First line contains the number of activities, n
+
+Next 'n' line contains the details of the activities such as name of activity, start time and finish time
+
+Output Format
+
+Print the name of the activities that are selected separated by a space
+
+
+
+
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct activity{
+    int start, finish;
+    string name;
+};
+
+struct compare{
+    bool operator()(const activity& a, const activity& b){
+        return a.start < b.start;
+    }
+};
+
+void func(priority_queue<activity, vector<activity>, compare> &pq, vector<activity> &selected) {
+    while (!pq.empty()) {
+        activity current = pq.top();
+        pq.pop();
+        selected.push_back(current);
+
+        while (!pq.empty() && pq.top().finish > current.start) {
+            pq.pop();
+        }
+    }
+}
+
+int main(){
+    int n;
+    cin >> n;
+    priority_queue<activity, vector<activity>, compare> pq;
+    vector<activity> selected;
+    for(int i=0; i<n; i++){
+        activity a;
+        cin >> a.name >> a.start >> a.finish;
+        pq.push(a);
+    }
+    func(pq, selected);
+
+    for (int i=selected.size(); i>=0; i--) {
+        cout << selected[i].name << " ";
+    }
+    cout << endl;
+
+}
