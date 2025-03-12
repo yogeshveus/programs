@@ -1,0 +1,37 @@
+#include <iostream>
+#include <set>
+using namespace std;
+struct activity{
+    public:
+        int a;
+        int b;
+        friend istream& operator >> (istream&, activity&);
+        friend ostream& operator <<(ostream&,const activity&);
+        bool operator< (const activity&) const;
+};
+
+istream& operator >>(istream& in, activity& act){
+    in>>act.a>>act.b;
+    return in;
+}
+ostream& operator <<(ostream &out, const activity& act){
+    out<<act.a<<" "<<act.b;
+    return out;
+}
+
+bool activity::operator<(const activity& ac)const{
+    return ac.a < a;
+}
+
+int main()
+{
+    activity ac1, ac2;
+    cin>>ac1;
+    cin >> ac2;
+    cout <<ac1;
+    cout << endl;
+    cout << ac2;
+    cout << endl;
+    bool x = ac1<ac2;
+    cout << x;
+}
