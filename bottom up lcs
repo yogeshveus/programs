@@ -1,0 +1,66 @@
+LCS using only one table
+Modify the bottom up dynamic programming algorithm for LCS to maintain only length table (c table) and print the LCS by examining the neighboring entries of the cell and print 'No common subsequence' if no such sequence exist.
+
+Input Format
+
+First line contains the first string, S1
+
+Next line contains the second string, S2
+
+Output Format
+
+Print the length of the longest LCS in the first line
+
+Print the Longest LCS that we get by traversing from the last cell (m,n) of the b table where m is the length of the first string and n is the length of the second string 
+#include <iostream>
+using namespace std;
+#include <vector>
+
+int lcs(string& s1, string &s2, vector<vector<int>>& mem){
+    int m = s1.size();
+    int n=s2.size();
+    for(int i=1; i<=m; i++){
+        for(int j=1; j<=n; j++){
+            if(s1[i-1] == s2[j-1]){
+                mem[i][j] = 1+ mem[i-1][j-1];
+            }
+            else{
+                mem[i][j] = max(mem[i-1][j], mem[i][j-1]);
+            }
+        }
+    }
+    return mem[m][n];
+}
+void print(string &s1, string &s2, vector<vector<int>>&mem){
+    int m = s1.length();
+    int n = s2.length();
+    if(mem[m][n] == 0){
+        cout<<"No common subsequence"<<endl;
+        return;
+    }
+    int i=m,j=n;
+    string lcsstr= "";
+    while(i>0 && j>0){
+        if(s1[i-1] == s2[j-1]){
+            lcsstr = s1[i-1] + lcsstr;
+            i--;
+            j--;
+        }
+        else if(mem[i-1][j] >= mem[i][j-1]){
+            i--;
+        }
+        else{
+            j--;
+        }
+    }
+    cout<<lcsstr<<endl;
+}
+int main(){
+    string s1,s2;
+    cin>>s1;
+    cin>>s2;
+    vector<vector<int>> mem((s1.length())+1,vector<int>((s2.length())+1,0));
+    
+    cout<<lcs(s1,s2, mem)<<endl;
+    print(s1, s2, mem);
+}
