@@ -1,0 +1,87 @@
+Love Diagonal Hate 3 Queen Game
+Love Diagonal Hate 3 Queen Game is a board game in which we have to place min(m,n) queens on a mXn rectangular board. The rows and columns are numbered from 1 to m and 1 to n respectively. We cannot place a queen on a cell if sum of their row and column indices is divisible by 3 (i.e) queens cannot be placed on cells with indices like (1,2), (5,1), ... In this game a queen is attacked by another queen if they are on the same row or on the same column. For example, if the dimension of the rectangular board is 4X5 then one of the solution is:
+
+1 0 0 0 0 
+0 1 0 0 0 
+0 0 0 1 0 
+0 0 1 0 0
+
+There are 6 such possible solutions for this board dimension. Given the dimension of the rectangular board develop a recursive algorithm using backtracking technique to find the number of different solutions
+
+Input Format
+
+First line contains number of rows in the rectangular board, m
+
+Next line contains number of rows in the rectangular board, n
+
+Output Format
+
+Print the number of solutions
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int count=0;
+
+bool isSafe(int row, int col, vector<int> &cols){
+    if((row+col+2) % 3 == 0){
+        return false;
+    }
+    if(cols[col]==1){
+        return false;
+    }
+    return true;
+}
+
+void nqueens(int row, int queensplaced, int m, int n, int numqueens, vector<vector<int>>&board, vector<int> &cols){
+    if(queensplaced == numqueens){
+        count++;
+        return;
+    }
+    if(row==m){
+        return;
+    }
+    for(int i=0; i<n; i++){
+        if(isSafe(row, i, cols)){
+            board[row][i] = 1;
+            cols[i] = 1;
+            nqueens(row+1, queensplaced+1, m, n, numqueens, board, cols);
+            board[row][i] = 0;
+            cols[i] = 0;
+        }
+    }
+    nqueens(row+1, queensplaced, m, n, numqueens, board, cols);
+}
+int solve(int m, int n){
+    int q = min(m, n);
+    vector<vector<int>> board(m, vector<int>(n,0));
+    vector<int> cols(n, 0);
+    nqueens(0,0,m,n,q,board,cols);
+    return count;
+}
+int main(){
+    int m,n;
+    cin>> m;
+    cin >> n;
+    cout << solve(m,n);
+}
+
+
+1) Start
+
+2) function
+3) if number of queens placed is equal to our target queens (minimum value of m and n), increment global count and return 
+4) If all rows are finished and we havent met target number of queens, return
+5) Iterate through all columns
+5.1) if corresponding row and column are safe, place queen and update columns array
+5.2) increment number of queens placed and call recursion for the next row
+5.3) remove queen and revert value in columns array (backtracking)
+6) If this row isnt possible, call function for the next row
+
+7) In driver function, get inputs from user,  call the above function and return the total count
+8) Stop
+
+place queen in every column of every row iteratively, backtrack if not valid, go furthur if valid 
+if number of queens placed is same as our aim, increment the count variable
